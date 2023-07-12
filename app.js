@@ -6,14 +6,15 @@ const bodyParser = require("body-parser");
 
 const invoiceRoutes = require("./api/routes/invoice");
 const generateInvoiceRoutes = require("./api/routes/generate-invoice");
-const renderUsersRoutes = require("./api/routes/users");
+const renderUsersRoutes = require("./api/routes/cx_users");
 const taskRoutes = require("./api/routes/task");
 const projectRoutes = require("./api/routes/project");
 const LoggingRoutes = require("./api/routes/logging");
 const syncDataRoutes = require("./api/routes/syncData");
 const authorizeDataRoutes = require("./api/routes/authorize");
+const userRoutes = require("./api/routes/user");
 
-const User = require("./api/models/users");
+const CxUser = require("./api/models/cx_users");
 const Logging = require("./api/models/logging");
 
 // Set ejs as express view engine
@@ -41,13 +42,14 @@ app.use((req, res, next) => {
 
 app.get("/", async (req, res) => {
   const userIdsWithLoggings = await Logging.find().distinct("rbUserId");
-  const users = await User.find({
+  const users = await CxUser.find({
     rbUserId: { $in: userIdsWithLoggings },
   }).lean();
   res.render("index", { users });
 });
 
 //Routes which should handle requests
+app.use("/user", userRoutes);
 app.use("/authorize", authorizeDataRoutes);
 app.use("/sync-data", syncDataRoutes);
 app.use("/invoice", invoiceRoutes);

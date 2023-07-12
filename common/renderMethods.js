@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
-const User = require("../api/models/users");
+const CxUser = require("../api/models/cx_users");
 const Logging = require("../api/models/logging");
 const Task = require("../api/models/task");
 const Project = require("../api/models/project");
@@ -21,8 +21,8 @@ const renderUsersLoggings = async ({ month, year, invoice, userId }) => {
     var endDate = dateToUnixTimestamp(new Date(year, month, 0));
   }
   const users = userId
-    ? await User.find({ rbUserId: userId })
-    : await User.find();
+    ? await CxUser.find({ rbUserId: userId })
+    : await CxUser.find();
   let loggingsData = [];
   for (const user of users) {
     let userData = {
@@ -93,7 +93,10 @@ const generateInvoiceData = async (
   const weeklyRanges = getWeeklyRanges(startDate, endDate);
 
   const projects = await Project.find().lean();
-  const user = await User.findOne({ rbUserId: userId }, { password: 0 }).lean();
+  const user = await CxUser.findOne(
+    { rbUserId: userId },
+    { password: 0 }
+  ).lean();
   const loggings = await Logging.find({ rbUserId: userId })
     .sort({ createdAt: "desc" })
     .exec();

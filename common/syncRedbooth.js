@@ -2,7 +2,7 @@ const axios = require("axios");
 const mongoose = require("mongoose");
 const { getAccessToken } = require("./authenticateRedbooth.js");
 const { saveRecord } = require("./db.js");
-const User = require("../api/models/users.js");
+const CxUser = require("../api/models/cx_users.js");
 const Logging = require("../api/models/logging.js");
 const Task = require("../api/models/task.js");
 const Project = require("../api/models/project.js");
@@ -131,7 +131,7 @@ const syncRedboothUsers = async () => {
       };
 
       await saveRecord({
-        model: User,
+        model: CxUser,
         modelData: userData,
         modelSearchData: {
           rbUserId: user.id,

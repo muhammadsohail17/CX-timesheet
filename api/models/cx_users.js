@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const userSchema = mongoose.Schema({
+const cx_userSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   rbUserId: { type: Number, required: true },
   name: { type: String, required: true },
@@ -10,4 +10,4 @@ const userSchema = mongoose.Schema({
   status: { type: Boolean, required: true },
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("CxUser", cx_userSchema);

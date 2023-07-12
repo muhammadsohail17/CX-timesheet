@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+const checkAuth = require("../middleware/check_auth");
 
-const User = require("../models/users");
+const CxUser = require("../models/cx_users");
 
 router.get("/", (req, res, next) => {
-  User.find()
+  CxUser.find()
     .select("_id rbUserId name username email password status")
     .exec()
     .then((docs) => {
@@ -38,8 +39,8 @@ router.get("/", (req, res, next) => {
     });
 });
 
-router.post("/", (req, res, next) => {
-  const user = new User({
+router.post("/", checkAuth, (req, res, next) => {
+  const user = new CxUser({
     _id: new mongoose.Types.ObjectId(),
     rbUserId: req.body.rbUserId,
     name: req.body.name,
@@ -65,9 +66,9 @@ router.post("/", (req, res, next) => {
     });
 });
 
-router.delete("/:userId", (req, res, next) => {
+router.delete("/:userId", checkAuth, (req, res, next) => {
   const id = req.params.userId;
-  User.deleteOne({ _id: id })
+  CxUser.deleteOne({ _id: id })
     .exec()
     .then((result) => {
       console.log(result);

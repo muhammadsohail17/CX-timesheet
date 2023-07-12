@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const checkAuth = require("../middleware/check_auth");
 
 const { generateInvoiceData } = require("../../common/renderMethods");
 
-router.post("/", async (req, res, next) => {
+router.post("/", checkAuth, async (req, res, next) => {
   try {
     const {
       month,
