@@ -4,6 +4,7 @@ const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 
+// Importing route modules for various API endpoints
 const invoiceRoutes = require("./api/routes/invoice");
 const generateInvoiceRoutes = require("./api/routes/generate-invoice");
 const renderUsersRoutes = require("./api/routes/cx_users");
@@ -14,12 +15,7 @@ const syncDataRoutes = require("./api/routes/syncData");
 const authorizeDataRoutes = require("./api/routes/authorize");
 const userRoutes = require("./api/routes/user");
 
-const CxUser = require("./api/models/cx_users");
-const Logging = require("./api/models/logging");
-
-// Set ejs as express view engine
-app.set("views", "views");
-app.set("view engine", "ejs");
+//Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
@@ -40,12 +36,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", async (req, res) => {
-  const userIdsWithLoggings = await Logging.find().distinct("rbUserId");
-  const users = await CxUser.find({
-    rbUserId: { $in: userIdsWithLoggings },
-  }).lean();
-  res.render("index", { users });
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "It works",
+  });
 });
 
 //Routes which should handle requests
@@ -74,11 +68,5 @@ app.use((error, req, res, next) => {
     },
   });
 });
-
-// app.use((req, res, next) => {
-//   res.status(200).json({
-//     message: "It works!",
-//   });
-// });
 
 module.exports = app;

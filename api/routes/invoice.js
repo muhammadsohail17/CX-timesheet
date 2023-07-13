@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
-const checkAuth = require("../middleware/check_auth");
 
+const checkAuth = require("../middleware/check_auth");
 const InvoiceController = require("../controllers/invoice");
 
-router.get("/", checkAuth, InvoiceController.get_invoice);
+router.get("/", InvoiceController.get_invoice);
 
 router.post("/", checkAuth, InvoiceController.create_invoice);
 

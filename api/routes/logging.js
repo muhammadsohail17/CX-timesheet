@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
-const checkAuth = require("../middleware/check_auth");
 
+const checkAuth = require("../middleware/check_auth");
 const LoggingController = require("../controllers/logging");
 
-router.get("/", checkAuth, LoggingController.get_loggings);
+router.get("/", LoggingController.get_loggings);
 
 router.post("/", checkAuth, LoggingController.create_logging);
 

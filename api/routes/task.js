@@ -5,7 +5,7 @@ const checkAuth = require("../middleware/check_auth");
 
 const TaskController = require("../controllers/task");
 
-router.get("/", checkAuth, TaskController.get_tasks);
+router.get("/", TaskController.get_tasks);
 
 router.post("/", checkAuth, TaskController.create_task);
 
