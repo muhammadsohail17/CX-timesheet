@@ -36,11 +36,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    message: "It works",
-  });
-});
+// app.get("/", (req, res) => {
+//   res.status(200).json({
+//     message: "It works",
+//   });
+// });
 
 //Routes which should handle requests
 app.use("/user", userRoutes);
