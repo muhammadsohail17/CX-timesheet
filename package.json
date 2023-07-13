@@ -19,7 +19,7 @@
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.3.0",
     "morgan": "^1.10.0",
-    "puppeteer": "^20.7.3"
+    "puppeteer": "^20.8.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
