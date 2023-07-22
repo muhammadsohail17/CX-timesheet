@@ -4,7 +4,7 @@ const router = express.Router();
 const checkAuth = require("../middleware/check_auth");
 const CxUsersController = require("../controllers/cx-users");
 
-router.get("/", checkAuth, CxUsersController.get_cx_users);
+router.get("/", CxUsersController.get_cx_users);
 
 router.post("/", checkAuth, CxUsersController.create_cx_users);
 

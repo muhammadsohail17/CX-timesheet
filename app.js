@@ -47,7 +47,7 @@ app.use("/user", userRoutes);
 app.use("/authorize", authorizeDataRoutes);
 app.use("/sync-data", syncDataRoutes);
 app.use("/invoice", invoiceRoutes);
-app.use("/invoice/generate-invoice", generateInvoiceRoutes);
+app.use("/invoice", generateInvoiceRoutes);
 app.use("/render-users", renderUsersRoutes);
 app.use("/tasks", taskRoutes);
 app.use("/projects", projectRoutes);

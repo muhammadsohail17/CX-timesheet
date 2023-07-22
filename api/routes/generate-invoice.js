@@ -4,6 +4,8 @@ const checkAuth = require("../middleware/check_auth");
 
 const InvoiceController = require("../controllers/generate-invoice");
 
-router.post("/", checkAuth, InvoiceController.generate_invoice);
+router.post("/generate-invoice", checkAuth, InvoiceController.generate_invoice);
+
+router.get("/get-hourly-rate/:userId", InvoiceController.get_hourly_rate);
 
 module.exports = router;
