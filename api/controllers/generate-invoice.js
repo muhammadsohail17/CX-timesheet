@@ -19,8 +19,6 @@ exports.generate_invoice = async (req, res, next) => {
       customItems
     );
 
-    console.log("data", data);
-
     // Destructuring 'data' object to conveniently access and work with its properties
     const {
       name,
@@ -48,6 +46,7 @@ exports.generate_invoice = async (req, res, next) => {
       currency,
       companyName,
       companyAddress,
+      invoiceNo,
       invoiceDate,
       invoiceDueDate,
       totalLoggedHours,
@@ -65,15 +64,25 @@ exports.generate_invoice = async (req, res, next) => {
     );
 
     // Save the main invoice with reference to the main invoice item
-    const invoice = new Invoice({
-      invoice_id: newInvoiceItem._id,
-      userId,
-      month,
-      year,
-      hourlyRate,
-      customItems: customItemsFormatted,
-    });
-    const newInvoice = await invoice.save();
+    const userAlreadyExists = await Invoice.exists({ userId });
+    let newInvoice;
+    if (userAlreadyExists) {
+      newInvoice = await Invoice.findOneAndUpdate(
+        { userId },
+        { hourlyRate },
+        { new: true, upsert: true }
+      );
+    } else {
+      const invoice = new Invoice({
+        invoice_id: newInvoiceItem._id,
+        userId,
+        month,
+        year,
+        hourlyRate,
+        customItems: customItemsFormatted,
+      });
+      newInvoice = await invoice.save();
+    }
 
     // Collect the IDs of saved custom items
     const customItemIds = [];
@@ -108,15 +117,12 @@ exports.get_hourly_rate = async (req, res, next) => {
   try {
     const { userId } = req.params;
 
-    console.log("req.params", req.params);
     if (!userId) {
       return res.status(404).json({ message: "Invalid user ID." });
     }
 
     // Find the InvoiceItem document for the given userId
     const invoiceItem = await Invoice.findOne({ userId }).lean();
-
-    console.log("invoiceItem", invoiceItem);
 
     if (!invoiceItem) {
       return res
@@ -132,5 +138,35 @@ exports.get_hourly_rate = async (req, res, next) => {
     res
       .status(500)
       .json({ error: "An error occurred while fetching the hourly rate." });
+  }
+};
+
+exports.get_next_invoice_no = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    if (!userId) {
+      return res.status(404).json({ message: "Invalid user ID." });
+    }
+
+    // Find the InvoiceItem document for the given userId
+    const invoiceItem = await InvoiceItem.find({ rbUserId: userId })
+      .sort({ invoiceNo: -1 })
+      .lean();
+
+    if (!invoiceItem) {
+      return res
+        .status(404)
+        .json({ message: "Invoice number not found for the user." });
+    }
+
+    // Extract the invoiceNo from the InvoiceItem and respond with the data
+    let { invoiceNo } = invoiceItem[0];
+    invoiceNo++;
+    return res.status(200).json({ invoiceNo });
+  } catch (err) {
+    console.log(err);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching the invoice number." });
   }
 };

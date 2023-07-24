@@ -8,4 +8,9 @@ router.post("/generate-invoice", checkAuth, InvoiceController.generate_invoice);
 
 router.get("/get-hourly-rate/:userId", InvoiceController.get_hourly_rate);
 
+router.get(
+  "/get-next-invoice-no/:userId",
+  InvoiceController.get_next_invoice_no
+);
+
 module.exports = router;
