@@ -2,14 +2,14 @@ const express = require("express");
 const router = express.Router();
 
 const checkAuth = require("../middleware/check_auth");
-const LoggingController = require("../controllers/loggingController");
+const loggingController = require("../controllers/loggingController");
 
-router.get("/", LoggingController.get_loggings);
+router.get("/", loggingController.get_loggings);
 
-router.post("/", checkAuth, LoggingController.create_logging);
+router.post("/", checkAuth, loggingController.create_logging);
 
-router.put("/:loggingId", checkAuth, LoggingController.get_single_log);
+router.put("/:loggingId", checkAuth, loggingController.get_single_log);
 
-router.delete("/:loggingId", checkAuth, LoggingController.delete_logging);
+router.delete("/:loggingId", checkAuth, loggingController.delete_logging);
 
 module.exports = router;

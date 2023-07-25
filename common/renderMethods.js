@@ -113,8 +113,8 @@ const generateInvoiceData = async (
             new Date(logging.timeTrackingOn)
           );
           if (
-            loggingDate > weeklyRange.rangeStart &&
-            loggingDate < weeklyRange.rangeEnd
+            loggingDate > weeklyRange.date_from &&
+            loggingDate < weeklyRange.date_to
           ) {
             const task = await Task.findOne({
               rbTaskId: logging.rbTaskId,

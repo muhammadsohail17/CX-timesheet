@@ -6,8 +6,8 @@ A cronjob app written to fetch loggings data from Redbooth and store that into y
 
 Run the following commands to install the script.
 
-    git clone https://github.com/nicefellow1234/timesheet-cronjob.git
-    cd timesheet-cronjob
+    git clone https://github.com/muhammadsohail17/CX-timesheet.git
+    cd CX-timesheet
     npm i
 
 Rename `.env.sample` to `.env` and configure `MongoDB_URI` in there:

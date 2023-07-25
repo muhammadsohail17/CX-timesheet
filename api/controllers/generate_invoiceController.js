@@ -101,8 +101,9 @@ exports.generate_invoice = async (req, res, next) => {
 
     // Return the response with the IDs of main invoice item and custom items
     return res.status(200).json({
-      mainInvoiceItem: newInvoiceItem,
-      mainInvoice: newInvoice,
+      message: "Created invoice successfully",
+      invoice: newInvoice,
+      invoice_item: newInvoiceItem,
       customItemIds,
     });
   } catch (err) {
@@ -127,12 +128,14 @@ exports.get_hourly_rate = async (req, res, next) => {
     if (!invoiceItem) {
       return res
         .status(404)
-        .json({ message: "Hourly rate not found for the user." });
+        .json({ message: "hourly rate not found for the user." });
     }
 
     // Extract the hourlyRate from the InvoiceItem and respond with the data
     const { hourlyRate } = invoiceItem;
-    return res.status(200).json({ hourlyRate });
+    return res
+      .status(200)
+      .json({ message: "hourly rate found for the user.", hourlyRate });
   } catch (err) {
     console.log(err);
     res
@@ -168,7 +171,10 @@ exports.get_next_invoice_no = async (req, res, next) => {
     }
 
     // Respond with the updated or new invoiceNo
-    return res.status(200).json({ invoiceNo: invoiceItem.invoiceNo });
+    return res.status(200).json({
+      message: "invoice number for the user is:",
+      invoiceNo: invoiceItem.invoiceNo,
+    });
   } catch (err) {
     console.log(err);
     res

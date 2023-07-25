@@ -2,15 +2,15 @@ const express = require("express");
 const router = express.Router();
 const checkAuth = require("../middleware/check_auth");
 
-const InvoiceController = require("../controllers/generate_invoiceController");
+const invoiceController = require("../controllers/generate_invoiceController");
 
-router.post("/generate-invoice", checkAuth, InvoiceController.generate_invoice);
+router.post("/generate-invoice", checkAuth, invoiceController.generate_invoice);
 
-router.get("/get-hourly-rate/:userId", InvoiceController.get_hourly_rate);
+router.get("/get-hourly-rate/:userId", invoiceController.get_hourly_rate);
 
 router.get(
   "/get-next-invoice-no/:userId",
-  InvoiceController.get_next_invoice_no
+  invoiceController.get_next_invoice_no
 );
 
 module.exports = router;

@@ -38,26 +38,15 @@ const getWeeklyRanges = (startDate, endDate) => {
   const diff = startDate.getDate() - startDay + (startDay === 0 ? -6 : 1);
   startDate.setDate(diff);
   while (startDate <= endDate) {
-    const rangeStart = new Date(startDate);
-    rangeStart.setHours(0, 0, 0);
-    const rangeEnd = new Date(startDate);
-    rangeEnd.setDate(rangeStart.getDate() + 6);
-    rangeEnd.setHours(23, 59, 59);
-    // Format the dates as strings
-    const formattedStart = rangeStart.toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
-    const formattedEnd = rangeEnd.toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
+    const date_from = new Date(startDate);
+    date_from.setHours(0, 0, 0);
+    const date_to = new Date(startDate);
+    date_to.setDate(date_from.getDate() + 6);
+    date_to.setHours(23, 59, 59);
     weeklyRanges.push({
-      range: `${formattedStart} to ${formattedEnd}`,
-      rangeStart: dateToUnixTimestamp(rangeStart),
-      rangeEnd: dateToUnixTimestamp(rangeEnd),
+      range: `${formatDate(date_from)} to ${formatDate(date_to)}`,
+      date_from: dateToUnixTimestamp(date_from),
+      date_to: dateToUnixTimestamp(date_to),
     });
     // Increment startDate for the next week
     startDate.setDate(startDate.getDate() + 7);
@@ -72,6 +61,13 @@ const dateToUnixTimestamp = (date) => {
 const unixTimestampToDate = (timestamp) => {
   return new Date(timestamp * 1000);
 };
+
+const formatDate = (date) =>
+  date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
 module.exports = {
   toHoursAndMinutes,

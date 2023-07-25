@@ -11,7 +11,7 @@ const renderUsersRoutes = require("./api/routes/cx_users");
 const taskRoutes = require("./api/routes/task");
 const projectRoutes = require("./api/routes/project");
 const loggingRoutes = require("./api/routes/logging");
-const syncDataRoutes = require("./api/routes/syncData");
+const syncDataRoutes = require("./api/routes/sync_data");
 const authorizeDataRoutes = require("./api/routes/authorize");
 const userRoutes = require("./api/routes/user");
 
