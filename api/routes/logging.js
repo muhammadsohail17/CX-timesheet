@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const checkAuth = require("../middleware/check_auth");
-const LoggingController = require("../controllers/logging");
+const LoggingController = require("../controllers/loggingController");
 
 router.get("/", LoggingController.get_loggings);
 

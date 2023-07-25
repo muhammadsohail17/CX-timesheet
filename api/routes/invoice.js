@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const checkAuth = require("../middleware/check_auth");
-const InvoiceController = require("../controllers/invoice");
+const InvoiceController = require("../controllers/invoiceController");
 
 router.get("/", InvoiceController.get_invoice);
 

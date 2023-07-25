@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
 const checkAuth = require("../middleware/check_auth");
 
-const TaskController = require("../controllers/task");
+const TaskController = require("../controllers/taskController");
 
 router.get("/", TaskController.get_tasks);
 

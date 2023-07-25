@@ -6,11 +6,11 @@ const bodyParser = require("body-parser");
 
 // Importing route modules for various API endpoints
 const invoiceRoutes = require("./api/routes/invoice");
-const generateInvoiceRoutes = require("./api/routes/generate-invoice");
+const generateInvoiceRoutes = require("./api/routes/generate_invoice");
 const renderUsersRoutes = require("./api/routes/cx_users");
 const taskRoutes = require("./api/routes/task");
 const projectRoutes = require("./api/routes/project");
-const LoggingRoutes = require("./api/routes/logging");
+const loggingRoutes = require("./api/routes/logging");
 const syncDataRoutes = require("./api/routes/syncData");
 const authorizeDataRoutes = require("./api/routes/authorize");
 const userRoutes = require("./api/routes/user");
@@ -51,7 +51,7 @@ app.use("/invoice", generateInvoiceRoutes);
 app.use("/render-users", renderUsersRoutes);
 app.use("/tasks", taskRoutes);
 app.use("/projects", projectRoutes);
-app.use("/loggings", LoggingRoutes);
+app.use("/loggings", loggingRoutes);
 
 //handle error
 app.use((req, res, next) => {

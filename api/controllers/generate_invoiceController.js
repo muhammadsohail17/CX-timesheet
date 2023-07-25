@@ -149,20 +149,26 @@ exports.get_next_invoice_no = async (req, res, next) => {
     }
 
     // Find the InvoiceItem document for the given userId
-    const invoiceItem = await InvoiceItem.find({ rbUserId: userId })
+    const invoiceItem = await InvoiceItem.findOne({ rbUserId: userId })
       .sort({ invoiceNo: -1 })
       .lean();
 
     if (!invoiceItem) {
-      return res
-        .status(404)
-        .json({ message: "Invoice number not found for the user." });
+      // If there's no InvoiceItem for the user, create a new one with initial invoiceNo
+      invoiceItem = await InvoiceItem.create({
+        rbUserId: userId,
+        invoiceNo: 1,
+      });
+    } else {
+      // Increment the invoiceNo and save it back to the database
+      invoiceItem.invoiceNo++;
+      await InvoiceItem.findByIdAndUpdate(invoiceItem._id, {
+        invoiceNo: invoiceItem.invoiceNo,
+      });
     }
 
-    // Extract the invoiceNo from the InvoiceItem and respond with the data
-    let { invoiceNo } = invoiceItem[0];
-    invoiceNo++;
-    return res.status(200).json({ invoiceNo });
+    // Respond with the updated or new invoiceNo
+    return res.status(200).json({ invoiceNo: invoiceItem.invoiceNo });
   } catch (err) {
     console.log(err);
     res
