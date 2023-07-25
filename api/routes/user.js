@@ -9,4 +9,6 @@ router.post("/login", userController.login_user);
 
 router.delete("/:userId", userController.delete_user);
 
+router.post("/forgot-password", userController.forgot_password);
+
 module.exports = router;

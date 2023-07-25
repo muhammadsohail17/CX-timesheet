@@ -1,5 +1,3 @@
-const puppeteer = require("puppeteer");
-const fs = require("fs");
 const CxUser = require("../api/models/cx_users");
 const Logging = require("../api/models/logging");
 const Task = require("../api/models/task");

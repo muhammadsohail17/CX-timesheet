@@ -2,6 +2,9 @@ const User = require("../models/user");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+
+const sendPasswordResetEmail = require("../../utils/functions/sendPasswordResetEmail");
 
 exports.sign_up_user = (req, res, next) => {
   User.find({ email: req.body.email })
@@ -100,6 +103,37 @@ exports.delete_user = (req, res, next) => {
           url: "http://localhost:3001/user/signup",
           body: { email: "String", password: "String" },
         },
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: err,
+      });
+    });
+};
+
+exports.forgot_password = (req, res, next) => {
+  const userEmail = req.body.email;
+  User.findOne({ email: userEmail })
+    .exec()
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found",
+        });
+      }
+
+      // Generate a reset token and store it in the database
+      const resetToken = crypto.randomBytes(20).toString("hex");
+      user.resetToken = resetToken;
+      user.save();
+
+      // Send the password reset email
+      sendPasswordResetEmail(userEmail, resetToken);
+
+      res.status(200).json({
+        message: "Password reset email sent",
       });
     })
     .catch((err) => {
