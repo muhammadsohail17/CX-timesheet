@@ -1,4 +1,4 @@
-const CxUser = require("../models/cx_users");
+const CxUser = require("../models/cxUsers");
 const mongoose = require("mongoose");
 
 exports.get_cx_users = (req, res, next) => {

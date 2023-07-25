@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
-const sendPasswordResetEmail = require("../../utils/functions/sendPasswordResetEmail");
+const sendPasswordResetEmail = require("../../utils/sendPasswordResetEmail");
 
 exports.sign_up_user = (req, res, next) => {
   User.find({ email: req.body.email })

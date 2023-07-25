@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const checkAuth = require("../middleware/check_auth");
 
-const invoiceController = require("../controllers/generate_invoiceController");
+const invoiceController = require("../controllers/generateInvoiceController");
 
 router.post("/generate-invoice", checkAuth, invoiceController.generate_invoice);
 

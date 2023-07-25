@@ -1,4 +1,4 @@
-const CxUser = require("../api/models/cx_users");
+const CxUser = require("../api/models/cxUsers");
 const Logging = require("../api/models/logging");
 const Task = require("../api/models/task");
 const Project = require("../api/models/project");
@@ -8,7 +8,7 @@ const {
   getWeeklyRanges,
   dateToUnixTimestamp,
   unixTimestampToDate,
-} = require("./util.js");
+} = require("../utils/util.js");
 
 const renderUsersLoggings = async ({ month, year, invoice, userId }) => {
   if (month && year && invoice) {

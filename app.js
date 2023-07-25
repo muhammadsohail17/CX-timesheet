@@ -4,14 +4,17 @@ const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 
+const corsErrorHandler = require("./utils/corsErrorHandler");
+const { handleNotFound, handleError } = require("./utils/errorHandler");
+
 // Importing route modules for various API endpoints
 const invoiceRoutes = require("./api/routes/invoice");
-const generateInvoiceRoutes = require("./api/routes/generate_invoice");
-const renderUsersRoutes = require("./api/routes/cx_users");
+const generateInvoiceRoutes = require("./api/routes/generateInvoice");
+const renderUsersRoutes = require("./api/routes/cxUsers");
 const taskRoutes = require("./api/routes/task");
 const projectRoutes = require("./api/routes/project");
 const loggingRoutes = require("./api/routes/logging");
-const syncDataRoutes = require("./api/routes/sync_data");
+const syncDataRoutes = require("./api/routes/syncData");
 const authorizeDataRoutes = require("./api/routes/authorize");
 const userRoutes = require("./api/routes/user");
 
@@ -21,20 +24,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
 //PREVENT CORS ERRORS
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-    return res.status(200).json({});
-  }
-  next();
-});
+app.use(corsErrorHandler);
 
 app.get("/", (req, res) => {
   res.status(200).json({
@@ -53,20 +44,10 @@ app.use("/tasks", taskRoutes);
 app.use("/projects", projectRoutes);
 app.use("/loggings", loggingRoutes);
 
-//handle error
-app.use((req, res, next) => {
-  const error = new Error("Not Found");
-  error.status = 404;
-  next(error);
-});
+// Handle "Not Found" error
+app.use(handleNotFound);
 
-app.use((error, req, res, next) => {
-  res.status(error.status || 500);
-  res.json({
-    error: {
-      message: error.message,
-    },
-  });
-});
+// Handle other errors
+app.use(handleError);
 
 module.exports = app;
