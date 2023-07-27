@@ -1,7 +1,7 @@
 FROM node:alpine
 
 # Create app directory
-WORKDIR /app
+WORKDIR /server
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
@@ -17,4 +17,4 @@ COPY . .
 
 EXPOSE 3001
 
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "start" ]

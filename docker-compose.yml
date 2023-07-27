@@ -13,12 +13,13 @@ services:
 
   # Web service
   web:
-    image: node:alpine
-    user: node
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       - NODE_ENV=development
     ports:
-      - "3001:3001"
+      - "80:3001"
     depends_on:
       - db
     command: >
