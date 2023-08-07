@@ -12,11 +12,11 @@ const {
 
 const renderUsersLoggings = async ({ month, year, invoice, userId }) => {
   if (month && year && invoice) {
-    var startDate = dateToUnixTimestamp(getLastSundayOfMonth(month - 1, year));
-    var endDate = dateToUnixTimestamp(getLastSundayOfMonth(month, year));
+    var dateFrom = dateToUnixTimestamp(getLastSundayOfMonth(month - 1, year));
+    var dateTo = dateToUnixTimestamp(getLastSundayOfMonth(month, year));
   } else {
-    var startDate = dateToUnixTimestamp(new Date(year, month - 1, 1));
-    var endDate = dateToUnixTimestamp(new Date(year, month, 0));
+    var dateFrom = dateToUnixTimestamp(new Date(year, month - 1, 1));
+    var dateTo = dateToUnixTimestamp(new Date(year, month, 0));
   }
   const users = userId
     ? await CxUser.find({ rbUserId: userId })
@@ -39,7 +39,7 @@ const renderUsersLoggings = async ({ month, year, invoice, userId }) => {
       if (
         month &&
         year &&
-        (loggingTimestamp < startDate || loggingTimestamp > endDate)
+        (loggingTimestamp < dateFrom || loggingTimestamp > dateTo)
       ) {
         continue;
       }
@@ -84,11 +84,11 @@ const generateInvoiceData = async (
   customItem = null,
   customValue = null
 ) => {
-  const startDate = getLastSundayOfMonth(month - 1, year, 1);
-  const endDate = getLastSundayOfMonth(month, year);
+  const dateFrom = getLastSundayOfMonth(month - 1, year, 1);
+  const dateTo = getLastSundayOfMonth(month, year);
   const invoiceDueDate = getLastSundayOfMonth(month, year);
   invoiceDueDate.setDate(invoiceDueDate.getDate() + 30);
-  const weeklyRanges = getWeeklyRanges(startDate, endDate);
+  const weeklyRanges = getWeeklyRanges(dateFrom, dateTo);
 
   const projects = await Project.find().lean();
   const user = await CxUser.findOne(
@@ -166,7 +166,7 @@ const generateInvoiceData = async (
     userId,
     hourlyRate,
     invoiceNo,
-    invoiceDate: endDate.toLocaleDateString("en-US", {
+    invoiceDate: dateTo.toLocaleDateString("en-US", {
       month: "long",
       day: "numeric",
       year: "numeric",
@@ -176,6 +176,8 @@ const generateInvoiceData = async (
       day: "numeric",
       year: "numeric",
     }),
+    dateFrom,
+    dateTo,
     totalLoggedHours: toHoursAndMinutes(totalLoggedHours).totalTime,
     monthlyTotals: (totalLoggedHours / 60) * hourlyRate,
     loggingsData,

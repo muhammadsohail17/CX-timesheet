@@ -9,6 +9,14 @@ exports.generate_invoice = async (req, res, next) => {
     const { userId, month, year, hourlyRate, invoiceNo, customItems } =
       req.body;
 
+    // Format customItems as needed
+    const customItemsFormatted = customItems.map((item) => {
+      return {
+        customItem: item.customItem,
+        customValue: item.customValue,
+      };
+    });
+
     // Generate invoice data
     let data = await generateInvoiceData(
       month,
@@ -16,52 +24,12 @@ exports.generate_invoice = async (req, res, next) => {
       userId,
       hourlyRate,
       invoiceNo,
-      customItems
+      customItemsFormatted
     );
 
     // Destructuring 'data' object to conveniently access and work with its properties
-    const {
-      name,
-      rbUserId,
-      username,
-      email,
-      status,
-      companyName,
-      companyAddress,
-      currency,
-      invoiceDate,
-      invoiceDueDate,
-      totalLoggedHours,
-      monthlyTotals,
-      loggingsData,
-    } = data;
-
-    // Save the main invoice item
-    const invoiceItem = new InvoiceItem({
-      name,
-      rbUserId,
-      username,
-      email,
-      status,
-      currency,
-      companyName,
-      companyAddress,
-      invoiceNo,
-      invoiceDate,
-      invoiceDueDate,
-      totalLoggedHours,
-      monthlyTotals,
-      loggingsData,
-    });
-    const newInvoiceItem = await invoiceItem.save();
-
-    // Convert customItems to the appropriate format for saving in the Invoice model
-    const customItemsFormatted = customItems.map(
-      ({ customItem, customValue }) => ({
-        customItem,
-        customValue,
-      })
-    );
+    const { rbUserId, dateFrom, dateTo, totalLoggedHours } = data;
+    console.log("data", data);
 
     // Save the main invoice with reference to the main invoice item
     const userAlreadyExists = await Invoice.exists({ userId });
@@ -74,15 +42,26 @@ exports.generate_invoice = async (req, res, next) => {
       );
     } else {
       const invoice = new Invoice({
-        invoice_id: newInvoiceItem._id,
         userId,
         month,
         year,
         hourlyRate,
+        invoiceNo,
         customItems: customItemsFormatted,
       });
       newInvoice = await invoice.save();
     }
+
+    // Save the main invoice item using the newInvoice._id
+    const invoiceItem = new InvoiceItem({
+      rbUserId,
+      invoice_id: newInvoice._id,
+      hourlyRate,
+      dateFrom,
+      dateTo,
+      totalLoggedHours,
+    });
+    const newInvoiceItem = await invoiceItem.save();
 
     // Collect the IDs of saved custom items
     const customItemIds = [];

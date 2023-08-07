@@ -1,10 +1,13 @@
 const mongoose = require("mongoose");
-
-mongoose.connect(
-  "mongodb+srv://CX-timesheet:" +
-    process.env.MONGO_ATLAS_PW +
-    "@cx-timesheet.ibmrtvy.mongodb.net/?retryWrites=true&w=majority"
-);
+try {
+  mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  console.log("Connected to MongoDB successfully!");
+} catch (error) {
+  console.error("Error connecting to MongoDB:", error.message);
+}
 
 const saveRecord = async ({
   model,

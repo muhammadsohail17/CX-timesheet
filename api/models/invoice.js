@@ -10,11 +10,8 @@ const invoiceScheema = mongoose.Schema({
   month: { type: Number, required: true },
   year: { type: Number, required: true },
   hourlyRate: { type: Number, required: true },
-  invoice_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "InvoiceItem",
-    required: false,
-  },
+  status: { type: Boolean, required: false },
+  invoiceNo: { type: Number, required: true },
   customItems: {
     type: [customItemSchema],
     required: false,
