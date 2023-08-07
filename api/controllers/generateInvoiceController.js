@@ -28,7 +28,8 @@ exports.generate_invoice = async (req, res, next) => {
     );
 
     // Destructuring 'data' object to conveniently access and work with its properties
-    const { rbUserId, dateFrom, dateTo, totalLoggedHours } = data;
+    const { rbUserId, dateFrom, dateTo, totalLoggedHours, monthlyTotals } =
+      data;
     console.log("data", data);
 
     // Save the main invoice with reference to the main invoice item
@@ -60,6 +61,7 @@ exports.generate_invoice = async (req, res, next) => {
       dateFrom,
       dateTo,
       totalLoggedHours,
+      monthlyTotals,
     });
     const newInvoiceItem = await invoiceItem.save();
 

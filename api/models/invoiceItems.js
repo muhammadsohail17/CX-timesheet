@@ -11,6 +11,7 @@ const invoiceItemSchema = new mongoose.Schema({
   invoiceDate: { type: String, required: false },
   invoiceDueDate: { type: String, required: false },
   totalLoggedHours: { type: String, required: false },
+  monthlyTotals: { type: Number, required: false },
   dateFrom: { type: Date, required: false },
   dateTo: { type: Date, required: false },
 });
