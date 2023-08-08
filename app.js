@@ -17,6 +17,7 @@ const loggingRoutes = require("./api/routes/logging");
 const syncDataRoutes = require("./api/routes/syncData");
 const authorizeDataRoutes = require("./api/routes/authorize");
 const userRoutes = require("./api/routes/user");
+const weeklySummary = require("./api/routes/cfWeeklySummary");
 
 //Middlewares
 app.use(express.json());
@@ -43,6 +44,7 @@ app.use("/render-users", renderUsersRoutes);
 app.use("/tasks", taskRoutes);
 app.use("/projects", projectRoutes);
 app.use("/loggings", loggingRoutes);
+app.use("/generate-weekly-summary", weeklySummary);
 
 // Handle "Not Found" error
 app.use(handleNotFound);
