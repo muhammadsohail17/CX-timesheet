@@ -176,10 +176,11 @@ const generateInvoiceData = async (
       day: "numeric",
       year: "numeric",
     }),
-    dateFrom,
-    dateTo,
-    totalLoggedHours: toHoursAndMinutes(totalLoggedHours).totalTime,
+    dateFrom: Math.floor(dateFrom.getTime() / 1000),
+    dateTo: Math.floor(dateTo.getTime() / 1000),
+    totalLoggedHours: toHoursAndMinutes(totalLoggedHours).totalHoursAndMinutes,
     monthlyTotals: (totalLoggedHours / 60) * hourlyRate,
+    rbProjectId: loggingsData[0].rbProjectId,
     loggingsData,
   };
 

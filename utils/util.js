@@ -1,10 +1,11 @@
 const toHoursAndMinutes = (totalMinutes) => {
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
+  const totalHoursAndMinutes = hours + minutes / 60; // Calculate total hours + minutes
   return {
     hours,
     minutes,
-    totalTime: `${hours}h${minutes > 0 ? ` ${minutes}m` : ""}`,
+    totalHoursAndMinutes, // Return total hours + minutes
   };
 };
 
