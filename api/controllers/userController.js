@@ -92,6 +92,21 @@ exports.login_user = (req, res, next) => {
     });
 };
 
+exports.get_regestered_users = (req, res) => {
+  User.find({}, "email") // Fetch only the email field from the User collection
+    .exec()
+    .then((users) => {
+      const registeredEmails = users.map((user) => user.email);
+      res.status(200).json(registeredEmails);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: err,
+      });
+    });
+};
+
 exports.delete_user = (req, res, next) => {
   const id = req.params.userId;
   User.deleteOne({ _id: id })
