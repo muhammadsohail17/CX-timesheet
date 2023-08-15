@@ -24,7 +24,7 @@ exports.create_cf_weekly_summary = async (req, res) => {
       const values = csvLines[i]
         .split(",")
         .map((value) => value.replace(/"/g, "").trim());
-      const entry = {};
+      const entry = { _id: new mongoose.Types.ObjectId() };
       for (let j = 0; j < headers.length; j++) {
         entry[headers[j].replace(/"/g, "").trim()] = values[j];
       }
@@ -37,22 +37,6 @@ exports.create_cf_weekly_summary = async (req, res) => {
       _id: new mongoose.Types.ObjectId(),
       dateRangeStart: req.body.dateRangeStart,
       dateRangeEnd: req.body.dateRangeEnd,
-      exportType: req.body.exportType,
-      summaryFilter: {
-        groups: req.body.summaryFilter.groups,
-        amounts: req.body.summaryFilter.amounts,
-        projects: {
-          ids: req.body.summaryFilter.projects.ids,
-          status: req.body.summaryFilter.projects.status,
-          exportType: req.body.summaryFilter.projects.exportType,
-        },
-      },
-      detailedFilter: {
-        options: {
-          totals: req.body.detailedFilter.options.totals,
-        },
-        sortColumn: req.body.detailedFilter.sortColumn,
-      },
       weeklyData: weeklyData,
     });
 
