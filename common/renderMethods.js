@@ -139,11 +139,13 @@ const generateInvoiceData = async (
           projectLoggingsData.push({
             ...weeklyRange,
             weeklyTotalLoggedHours: toHoursAndMinutes(weeklyTotalLoggedHours)
-              .totalTime,
+              .totalHoursAndMinutes,
             weeklyTotals:
               Math.round((weeklyTotalLoggedHours / 60) * hourlyRate * 100) /
               100,
             weeklyLoggingsData,
+            hourlyRate,
+            projectName: project.name,
           });
         }
       }
@@ -180,7 +182,6 @@ const generateInvoiceData = async (
     dateTo: Math.floor(dateTo.getTime() / 1000),
     totalLoggedHours: toHoursAndMinutes(totalLoggedHours).totalHoursAndMinutes,
     monthlyTotals: (totalLoggedHours / 60) * hourlyRate,
-    rbProjectId: loggingsData[0].rbProjectId,
     loggingsData,
   };
 

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const customItemSchema = new mongoose.Schema({
   customItem: { type: String, required: true },
-  customValue: { type: String, required: true },
+  customValue: { type: Number, required: true },
 });
 
 const invoiceScheema = mongoose.Schema({

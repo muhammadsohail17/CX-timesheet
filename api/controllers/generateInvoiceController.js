@@ -6,16 +6,7 @@ const InvoiceItem = require("../models/invoiceItems");
 
 exports.generate_invoice = async (req, res, next) => {
   try {
-    const { userId, month, year, hourlyRate, invoiceNo, customItems } =
-      req.body;
-
-    // Format customItems as needed
-    const customItemsFormatted = customItems.map((item) => {
-      return {
-        customItem: item.customItem,
-        customValue: item.customValue,
-      };
-    });
+    const { userId, month, year, hourlyRate, invoiceNo } = req.body;
 
     // Generate invoice data
     let data = await generateInvoiceData(
@@ -23,18 +14,24 @@ exports.generate_invoice = async (req, res, next) => {
       year,
       userId,
       hourlyRate,
-      invoiceNo,
-      customItemsFormatted
+      invoiceNo
     );
 
     // Destructuring 'data' object to conveniently access and work with its properties
     const {
+      name,
       rbUserId,
       rbProjectId,
       dateFrom,
       dateTo,
+      invoiceDate,
+      invoiceDueDate,
+      companyName,
+      companyAddress,
+      currency,
       totalLoggedHours,
       monthlyTotals,
+      loggingsData,
     } = data;
     console.log("data", data);
 
@@ -54,45 +51,34 @@ exports.generate_invoice = async (req, res, next) => {
         year,
         hourlyRate,
         invoiceNo,
-        customItems: customItemsFormatted,
       });
       newInvoice = await invoice.save();
     }
 
     // Save the main invoice item using the newInvoice._id
     const invoiceItem = new InvoiceItem({
+      name,
       rbUserId,
       invoice_id: newInvoice._id,
       hourlyRate,
       rbProjectId,
       dateFrom,
+      invoiceDate,
+      invoiceDueDate,
+      companyName,
+      companyAddress,
       dateTo,
+      currency,
       totalLoggedHours,
       monthlyTotals,
+      loggingsData,
     });
     const newInvoiceItem = await invoiceItem.save();
 
-    // Collect the IDs of saved custom items
-    const customItemIds = [];
-
-    // Process and save custom items
-    for (const customItemData of customItems) {
-      const { customItem, customValue } = customItemData;
-      const customInvoiceItem = new InvoiceItem({
-        customItem,
-        customValue,
-        invoiceId: newInvoice._id,
-      });
-      const newCustomItem = await customInvoiceItem.save();
-      customItemIds.push(newCustomItem._id);
-    }
-
-    // Return the response with the IDs of main invoice item and custom items
     return res.status(200).json({
       message: "Created invoice successfully",
       invoice: newInvoice,
       invoice_item: newInvoiceItem,
-      customItemIds,
     });
   } catch (err) {
     console.log(err);
