@@ -90,6 +90,28 @@ exports.generate_invoice = async (req, res, next) => {
   }
 };
 
+exports.generate_weekly_summary = async (req, res, next) => {
+  try {
+    const { rbUserId } = req.params;
+
+    if (!rbUserId) {
+      return res.status(404).json({ message: "Invalid user ID." });
+    }
+
+    // Find the InvoiceItem document for the given userId
+    const invoiceItem = await InvoiceItem.findOne({ rbUserId }).lean();
+    console.log("invoiceItem", invoiceItem);
+
+    return res.status(200).json({
+      message: "InvoiceItem found for the user.",
+      InvoiceItem: invoiceItem,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err });
+  }
+};
+
 exports.generate_invoice_pdf = async (req, res, next) => {
   const { month, year, userId, hourlyRate, invoiceNo } = req.body;
   try {
