@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Invoice</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100">
+    <div class="container mx-auto p-4 mt-4 bg-white shadow-lg rounded-lg">
+      <div class="flex justify-between">
+        <div>
+          <img
+            src="../images/connextar-logo-dark.png"
+            alt="logo"
+            class="w-20 h-20"
+          />
+          <h1 class="text-2xl font-bold my-6"><%= invoiceItem.name %></h1>
+          <div class="mb-4">
+            <p class="font-bold py-2">Bill To:</p>
+            <p class="text-md">
+              <%= invoiceItem.companyName %><br />
+              <%= invoiceItem.companyAddress %><br />
+            </p>
+          </div>
+        </div>
+        <div class="text-right flex flex-col justify-end mb-8">
+          <p class="font-normal py-0 text-left">
+            <span class="font-semibold">Invoice Number:</span> # <%=
+            invoiceItem.invoiceNo %>
+          </p>
+          <p class="font-normal py-1 text-left">
+            <span class="font-semibold">Date:</span> <%= invoiceItem.invoiceDate
+            %>
+          </p>
+          <p class="font-normal py-0 text-left">
+            <span class="font-semibold">Due Date:</span> <%=
+            invoiceItem.invoiceDueDate %>
+          </p>
+        </div>
+      </div>
+      <table class="w-full mt-8 border">
+        <thead>
+          <tr>
+            <th class="border px-4 py-2 bg-slate-50">Project</th>
+            <th class="border px-4 py-2 bg-slate-50 pl-2.5 pr-2.5">Period</th>
+            <th class="border px-4 py-2 bg-slate-50">Rate</th>
+            <th class="border px-4 py-2 bg-slate-50">Hours</th>
+            <th class="border px-4 py-2 bg-slate-50">Charges</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (invoiceItem.loggingsData && invoiceItem.loggingsData.length >
+          0) { %> <% invoiceItem.loggingsData.forEach((logData, logIndex) => {
+          %> <% if (logData.projectLoggingsData &&
+          logData.projectLoggingsData.length > 0) { %> <%
+          logData.projectLoggingsData.forEach((projectData, projectIndex) => {
+          %>
+          <tr>
+            <td class="border px-8 py-2 text-center whitespace-nowrap">
+              <%= projectData.projectName %>
+            </td>
+            <td class="border px-8 py-2 text-center whitespace-nowrap">
+              <%= projectData.range %>
+            </td>
+            <td class="border px-8 py-2 text-center whitespace-nowrap">
+              <%= invoiceItem.currency %><%= projectData.hourlyRate %>
+            </td>
+            <td class="border px-6 py-2 text-center whitespace-nowrap">
+              <%= projectData.weeklyTotalLoggedHours.toFixed(2) %>
+            </td>
+            <td class="border px-6 py-2 text-center whitespace-nowrap">
+              <%= projectData.weeklyTotals.toFixed(2) %>
+            </td>
+          </tr>
+          <% }) %> <% } %> <% }) %> <% } %>
+
+          <!-- Total -->
+          <tr>
+            <td class="px-6 py-2 text-center pl-2.5 pr-2.5"></td>
+            <td class="px-8 py-2 text-center"></td>
+            <td class="px-8 py-2 text-center"></td>
+            <td class="px-8 text-center font-semibold whitespace-nowrap">
+              Total Logged Hours
+            </td>
+            <td class="px-8 py-2 text-center font-bold whitespace-nowrap">
+              <%= invoiceItem.currency %> <%=
+              invoiceItem.totalLoggedHours.toFixed(2) %>
+            </td>
+          </tr>
+          <tr>
+            <td class="px-6 py-2 text-center pl-2.5 pr-2.5"></td>
+            <td class="px-8 py-2 text-center"></td>
+            <td class="px-8 py-2 text-center"></td>
+            <td class="px-8 py-2 text-center font-semibold whitespace-nowrap">
+              Monthly Total
+            </td>
+            <td class="px-8 py-2 text-center font-bold whitespace-nowrap">
+              <%= invoiceItem.currency %> <%= invoiceItem.monthlyTotals %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

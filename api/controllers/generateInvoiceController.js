@@ -1,5 +1,7 @@
 const { generateInvoiceData } = require("../../common/renderMethods");
-const mongoose = require("mongoose");
+const ejs = require("ejs");
+const path = require("path");
+const puppeteer = require("puppeteer");
 
 const Invoice = require("../models/invoice");
 const InvoiceItem = require("../models/invoiceItems");
@@ -82,6 +84,43 @@ exports.generate_invoice = async (req, res, next) => {
     });
   } catch (err) {
     console.log(err);
+    res.status(500).json({
+      error: err,
+    });
+  }
+};
+
+exports.generate_invoice_pdf = async (req, res, next) => {
+  const { month, year, userId, hourlyRate, invoiceNo } = req.body;
+  try {
+    const invoiceItem = await generateInvoiceData(
+      month,
+      year,
+      userId,
+      hourlyRate,
+      invoiceNo
+    );
+    // Use "__dirname" to get the current directory of the script
+    const templatePath = path.join("./views", "invoiceTemplate.ejs");
+    // Render the EJS template
+    const templateContent = await ejs.renderFile(templatePath, { invoiceItem });
+
+    const browser = await puppeteer.launch({ headless: "new" });
+    const page = await browser.newPage();
+    await page.setContent(templateContent);
+
+    const pdfBuffer = await page.pdf({ format: "A4" });
+
+    await browser.close();
+
+    // Set the appropriate headers for downloading the PDF
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", 'attachment; filename="invoice.pdf"');
+
+    // Send the PDF buffer as the response
+    res.send(pdfBuffer);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({
       error: err,
     });

@@ -27,6 +27,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 //PREVENT CORS ERRORS
 app.use(corsErrorHandler);
+// Set ejs as express view engine
+app.set("views", "views");
+app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
   res.status(200).json({
