@@ -153,6 +153,7 @@ exports.forgot_password = (req, res, next) => {
 
       res.status(200).json({
         message: "Password reset email sent",
+        resetToken,
       });
     })
     .catch((err) => {
@@ -161,4 +162,46 @@ exports.forgot_password = (req, res, next) => {
         error: err,
       });
     });
+};
+
+exports.reset_password = async (req, res, next) => {
+  try {
+    const { email, password, confirmPassword } = req.body;
+
+    console.log(password, confirmPassword);
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        status: 0,
+        message: "Password and confirm password do not match!",
+      });
+    } else {
+      // Hash the password using bcrypt
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Find the user with the given email
+      const user = await User.findOne({ email: email });
+
+      if (!user) {
+        return res.status(404).json({
+          status: 0,
+          message: "User not found.",
+        });
+      }
+
+      user.password = hashedPassword;
+      await user.save();
+
+      return res.status(200).json({
+        status: 1,
+        message: "Password reset successful!",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: 0,
+      message: "An error occurred.",
+    });
+  }
 };

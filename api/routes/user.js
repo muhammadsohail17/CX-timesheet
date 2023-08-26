@@ -13,4 +13,6 @@ router.get("/get-registered-users", userController.get_regestered_users);
 
 router.post("/forgot-password", userController.forgot_password);
 
+router.post("/reset-password", userController.reset_password);
+
 module.exports = router;

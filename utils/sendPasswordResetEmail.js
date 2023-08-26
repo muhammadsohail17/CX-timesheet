@@ -16,7 +16,7 @@ function sendPasswordResetEmail(userEmail, resetToken) {
     // from: "your-email@gmail.com",
     to: userEmail,
     subject: "Password Reset",
-    html: `<p>Please click the following link to reset your password: <a href="http://your-app/reset-password/${resetToken}">Reset Password</a></p>`,
+    html: `<p>Please click the following link to reset your password: <a href="http://localhost:3001/user/reset-password/${resetToken}">Reset Password</a></p>`,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
