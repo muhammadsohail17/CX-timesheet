@@ -117,6 +117,7 @@ const generateInvoiceData = async (
             const task = await Task.findOne({
               rbTaskId: logging.rbTaskId,
             }).exec();
+
             if (task.rbProjectId == project.rbProjectId) {
               weeklyLoggingsData.push({
                 rbCommentId: logging.rbCommentId,

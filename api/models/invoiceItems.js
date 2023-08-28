@@ -20,6 +20,7 @@ const invoiceItemSchema = new mongoose.Schema({
   dateTo: { type: Number, required: false },
   totalLoggedHours: { type: Number, required: false },
   loggingsData: { type: [mongoose.Schema.Types.Mixed], required: false },
+  createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("InvoiceItem", invoiceItemSchema);

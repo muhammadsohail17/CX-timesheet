@@ -35,7 +35,6 @@ exports.generate_invoice = async (req, res, next) => {
       monthlyTotals,
       loggingsData,
     } = data;
-    console.log("data", data);
 
     // Save the main invoice with reference to the main invoice item
     const userAlreadyExists = await Invoice.exists({ userId });
@@ -99,7 +98,9 @@ exports.generate_weekly_summary = async (req, res, next) => {
     }
 
     // Find the InvoiceItem document for the given userId
-    const invoiceItem = await InvoiceItem.findOne({ rbUserId }).lean();
+    const invoiceItem = await InvoiceItem.findOne({ rbUserId })
+      .sort({ createdAt: -1 })
+      .lean();
     console.log("invoiceItem", invoiceItem);
 
     return res.status(200).json({

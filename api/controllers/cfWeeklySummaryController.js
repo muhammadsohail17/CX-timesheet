@@ -30,7 +30,6 @@ exports.create_cf_weekly_summary = async (req, res) => {
       }
       weeklyData.push(entry);
     }
-    console.log("weeklyData", weeklyData);
 
     // Create and save CfWeeklySummary document
     const weeklySummary = new CfWeeklySummary({
@@ -61,7 +60,6 @@ exports.get_cf_weekly_summary = async (req, res) => {
       .exec();
 
     const weeklyData = data ? data.weeklyData : [];
-    console.log("weeklyData", weeklyData);
     const response = {
       count: weeklyData.length,
       data: weeklyData,
