@@ -114,15 +114,18 @@ exports.generate_weekly_summary = async (req, res, next) => {
 };
 
 exports.generate_invoice_pdf = async (req, res, next) => {
-  const { month, year, userId, hourlyRate, invoiceNo } = req.body;
   try {
-    const invoiceItem = await generateInvoiceData(
-      month,
-      year,
-      userId,
-      hourlyRate,
-      invoiceNo
-    );
+    const { rbUserId } = req.params;
+
+    if (!rbUserId) {
+      return res.status(404).json({ message: "Invalid user ID." });
+    }
+
+    // Find the InvoiceItem document for the given userId
+    const invoiceItem = await InvoiceItem.findOne({ rbUserId })
+      .sort({ createdAt: -1 })
+      .lean();
+    console.log("invoiceItem", invoiceItem);
     // Use "__dirname" to get the current directory of the script
     const templatePath = path.join("./views", "invoiceTemplate.ejs");
     // Render the EJS template
